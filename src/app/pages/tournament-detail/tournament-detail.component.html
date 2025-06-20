@@ -1,0 +1,53 @@
+<!-- isLoading STATE -->
+<div *ngIf="isLoading" class="loading-container">
+   <div #lottieContainer class="animation-box" ></div>
+</div>
+
+<!-- ERROR STATE -->
+<div *ngIf="!isLoading && isError" class="container">
+  <p class="error-text">Failed to load tournament. Please try again later.</p>
+</div>
+
+<!-- SUCCESS STATE -->
+<div *ngIf="!isLoading && tournament" class="container">
+  <!-- Header card -->
+  <div class="header">
+    <app-tournament-detail-header
+      [tournament]="tournament"
+      (tabChanged)="changeTab($event)"
+    ></app-tournament-detail-header>
+  </div>
+
+  <!-- Body -->
+  <div class="tab-content">
+    <app-tournament-detail-overview
+      *ngIf="selectedTab === 'overview'"
+      [tournament]="tournament"
+    ></app-tournament-detail-overview>
+
+    <app-tournament-detail-bracket
+      *ngIf="selectedTab === 'bracket'"
+      [tournament]="tournament"
+      [matches]="matches"
+      [participants]="participants"
+      [groupedMatches]="groupedMatches"
+    ></app-tournament-detail-bracket>
+
+    <app-tournament-detail-participants
+      *ngIf="selectedTab === 'participants'"
+      [tournament]="tournament"
+      [participants]="participants"
+    ></app-tournament-detail-participants>
+
+    <app-tournament-detail-matches
+      *ngIf="selectedTab === 'matches'"
+      [tournament]="tournament"
+      [groupedStats]="groupedStats"
+    ></app-tournament-detail-matches>
+
+    <app-test-bracket
+      *ngIf="selectedTab === 'test-bracket'"
+      [groupedMatches]="groupedMatches"
+    ></app-test-bracket>
+  </div>
+</div>
