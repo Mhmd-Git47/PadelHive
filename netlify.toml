@@ -2,9 +2,6 @@
   command = "ng build --configuration production"
   publish = "dist/tournament_website/browser/browser"
 
-[plugins]
-  package = ""
-
 [[redirects]]
   from = "/*"
   to = "/index.html"
