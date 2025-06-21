@@ -62,7 +62,7 @@ export class TournamentDetailBracketComponent implements OnInit {
   }
 
   getSetScores(scores_csv: string): [string, string][] {
-    if (!scores_csv) return [['N/A', 'N/A']];
+    if (!scores_csv) return [];
     return scores_csv.split(',').map((set) => {
       const [p1, p2] = set.split('-').map((s) => s.trim());
       return [p1 || '0', p2 || '0'];

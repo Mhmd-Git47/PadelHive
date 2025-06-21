@@ -4,9 +4,7 @@
     *ngFor="let tab of stageTabs"
     [class.active]="selectedStageTab === tab"
     [class.locked]="!finalStageAvailable && tab !== 'group'"
-    (click)="
-      finalStageAvailable || tab === 'group' ? changeStageTab(tab) : null
-    "
+    (click)="finalStageAvailable || tab === 'group' ? changeStageTab(tab) : null"
   >
     <ng-container *ngIf="tab === 'group' || finalStageAvailable">
       {{ tab | titlecase }} Stage
@@ -17,96 +15,104 @@
   </div>
 </div>
 
+<!-- Group Stage -->
 @if (selectedStageTab === 'group') {
-<div *ngFor="let groupId of getGroupStageIds()" class="group-block">
-  <h2 class="group-title">Group {{ groupId }}</h2>
+  <div *ngFor="let groupId of getGroupStageIds()" class="group-block">
+    <h2 class="group-title">Group {{ groupId }}</h2>
 
-  <div class="bracket-wrapper">
-    <div *ngFor="let round of getSortedRounds(groupId)" class="bracket-column">
-      <h3 class="round-title">Round {{ round }}</h3>
+    <div class="bracket-wrapper">
+      <div *ngFor="let round of getSortedRounds(groupId)" class="bracket-column">
+        <h3 class="round-title">Round {{ round }}</h3>
 
-      <div class="bracket-matches">
-        <div
-          *ngFor="let match of groupedMatches[groupId][round]"
-          class="match-card"
-        >
-          <!-- Player 1 Row -->
-          <div class="match-row">
-            <span class="player-name">
-              {{ getPlayerName(match.player1_id) }}
-            </span>
-            <div class="player-sets">
-              <span
-                class="set"
-                *ngFor="let set of getSetScores(match.scores_csv)"
-              >
-                {{ set[0] }}
+        <div class="bracket-matches">
+          <div
+            *ngFor="let match of groupedMatches[groupId][round]"
+            class="match-card"
+          >
+            <!-- Player 1 Row -->
+            <div class="match-row">
+              <span class="player-name">
+                {{ getPlayerName(match.player1_id) }}
               </span>
+              <div class="player-sets">
+                <ng-container *ngIf="getSetScores(match.scores_csv).length; else noScore">
+                  <span class="set" *ngFor="let set of getSetScores(match.scores_csv)">
+                    {{ set[0] }}
+                  </span>
+                </ng-container>
+              </div>
             </div>
-          </div>
 
-          <!-- Player 2 Row -->
-          <div class="match-row">
-            <span class="player-name">
-              {{ getPlayerName(match.player2_id) }}
-            </span>
-            <div class="player-sets">
-              <span
-                class="set"
-                *ngFor="let set of getSetScores(match.scores_csv)"
-              >
-                {{ set[1] }}
+            <!-- Player 2 Row -->
+            <div class="match-row">
+              <span class="player-name">
+                {{ getPlayerName(match.player2_id) }}
               </span>
+              <div class="player-sets">
+                <ng-container *ngIf="getSetScores(match.scores_csv).length; else noScore">
+                  <span class="set" *ngFor="let set of getSetScores(match.scores_csv)">
+                    {{ set[1] }}
+                  </span>
+                </ng-container>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 }
 
-<!-- for final stage -->
+<!-- Final Stage -->
 @else {
-<div class="group-block" *ngFor="let groupId of getFinalStageIds()">
-  <h2 class="group-title">Final Stage</h2>
+  <div class="group-block" *ngFor="let groupId of getFinalStageIds()">
+    <h2 class="group-title">Final Stage</h2>
 
-  <div class="bracket-wrapper" #bracketWrapper>
+    <div class="bracket-wrapper" #bracketWrapper>
+      <div *ngFor="let round of getSortedRounds(groupId); let colIndex = index" class="bracket-column">
+        <h3 class="round-title">Round {{ round }}</h3>
 
-    <!-- Bracket Columns -->
-    <div *ngFor="let round of getSortedRounds(groupId); let colIndex = index" class="bracket-column">
-      <h3 class="round-title">Round {{ round }}</h3>
-
-      <div class="bracket-matches">
-        <div
-          *ngFor="let match of groupedMatches[groupId][round]; let matchIndex = index"
-          class="match-card"
-          #matchRef
-          [attr.data-round]="round"
-          [attr.data-index]="matchIndex"
-          [attr.data-column]="colIndex"
-          [attr.data-group]="groupId"
-        >
-          <!-- Player Rows -->
-          <div class="match-row">
-            <span class="player-name">{{ getFinalStagePlayerName(match.player1_id) }}</span>
-            <div class="player-sets">
-              <span class="set" *ngFor="let set of getSetScores(match.scores_csv)">{{ set[0] }}</span>
+        <div class="bracket-matches">
+          <div
+            *ngFor="let match of groupedMatches[groupId][round]; let matchIndex = index"
+            class="match-card"
+            #matchRef
+            [attr.data-round]="round"
+            [attr.data-index]="matchIndex"
+            [attr.data-column]="colIndex"
+            [attr.data-group]="groupId"
+          >
+            <!-- Player 1 -->
+            <div class="match-row">
+              <span class="player-name">{{ getFinalStagePlayerName(match.player1_id) }}</span>
+              <div class="player-sets">
+                <ng-container *ngIf="getSetScores(match.scores_csv).length; else noScore">
+                  <span class="set" *ngFor="let set of getSetScores(match.scores_csv)">
+                    {{ set[0] }}
+                  </span>
+                </ng-container>
+              </div>
             </div>
-          </div>
 
-          <div class="match-row">
-            <span class="player-name">{{ getFinalStagePlayerName(match.player2_id) }}</span>
-            <div class="player-sets">
-              <span class="set" *ngFor="let set of getSetScores(match.scores_csv) ?? 'N/A'">{{ set[1]}}</span>
+            <!-- Player 2 -->
+            <div class="match-row">
+              <span class="player-name">{{ getFinalStagePlayerName(match.player2_id) }}</span>
+              <div class="player-sets">
+                <ng-container *ngIf="getSetScores(match.scores_csv).length; else noScore">
+                  <span class="set" *ngFor="let set of getSetScores(match.scores_csv)">
+                    {{ set[1] }}
+                  </span>
+                </ng-container>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-
 }
 
+<!-- Score Fallback Template -->
+<ng-template #noScore>
+  <span class="set">N/A</span>
+</ng-template>
