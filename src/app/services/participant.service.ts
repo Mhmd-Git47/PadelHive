@@ -10,21 +10,20 @@ export interface ParticipantDb {
   created_at?: string | null;
 }
 
-
-
 @Injectable({
   providedIn: 'root',
 })
 export class ParticipantService {
-  private apiUrl = 'http://localhost:3000/api/participants';
+  // private apiUrl = 'http://localhost:3000/api/participants';
+  private baseUrl = 'https://padelhive-node.onrender.com/api/participants';
 
   constructor(private http: HttpClient) {}
 
   addParticipant(data: ParticipantDb): Observable<ParticipantDb> {
-    return this.http.post<ParticipantDb>(this.apiUrl, data);
+    return this.http.post<ParticipantDb>(this.baseUrl, data);
   }
 
   getAllParticipants(): Observable<ParticipantDb[]> {
-    return this.http.get<ParticipantDb[]>(this.apiUrl);
+    return this.http.get<ParticipantDb[]>(this.baseUrl);
   }
 }

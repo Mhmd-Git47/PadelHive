@@ -6,6 +6,10 @@ import { Match, MatchesByGroup, Participant } from '../models/match.model';
 
 @Injectable({ providedIn: 'root' })
 export class TournamentService {
+
+    private baseUrl = 'https://padelhive-node.onrender.com/api';
+
+
   private tournaments: Tournament[] = [];
 
   private participants: Participant[] = [];
@@ -26,7 +30,7 @@ export class TournamentService {
   constructor(private http: HttpClient) {}
 
   getTournaments(): Observable<Tournament[]> {
-    return this.http.get<any[]>('http://localhost:3000/api/tournaments').pipe(
+    return this.http.get<any[]>(`${this.baseUrl}/tournaments`).pipe(
       map((rawList) => rawList.map((raw) => this.mapToTournament(raw))),
       map((tournaments) => {
         this.tournaments = tournaments;
@@ -66,7 +70,7 @@ export class TournamentService {
   // Matches
   fetchMatches(tid: number): Observable<Match[]> {
     return this.http
-      .get<any[]>(`http://localhost:3000/api/tournament/${tid}/matches`)
+      .get<any[]>(`${this.baseUrl}/tournament/${tid}/matches`)
       .pipe(
         map((res) => res.map((item) => this.mapToMatch(item.match))),
         map((matches) => {
@@ -79,7 +83,7 @@ export class TournamentService {
   // Participants
   fetchParticipants(tid: number): Observable<Participant[]> {
     return this.http
-      .get<any[]>(`http://localhost:3000/api/tournament/${tid}/participants`)
+      .get<any[]>(`${this.baseUrl}/tournament/${tid}/participants`)
       .pipe(
         map((res) =>
           res.map((item) => this.mapToParticipant(item.participant))
@@ -94,7 +98,7 @@ export class TournamentService {
   // Stats
   fetchStats(tid: number): Observable<any[]> {
     return this.http
-      .get<any[]>(`http://localhost:3000/api/tournament/${tid}/group-standings`)
+      .get<any[]>(`${this.baseUrl}/tournament/${tid}/group-standings`)
       .pipe(
         map((res) => {
           this.statsSubject.next(res);
@@ -116,7 +120,7 @@ export class TournamentService {
   getParticipants(tournamentId: number): Observable<Participant[]> {
     return this.http
       .get<any[]>(
-        `http://localhost:3000/api/tournament/${tournamentId}/participants`
+        `${this.baseUrl}/tournament/${tournamentId}/participants`
       )
       .pipe(
         map((res) => {
@@ -158,7 +162,7 @@ export class TournamentService {
   getMatches(tournamentId: number): Observable<Match[]> {
     return this.http
       .get<any[]>(
-        `http://localhost:3000/api/tournament/${tournamentId}/matches`
+        `${this.baseUrl}/tournament/${tournamentId}/matches`
       )
       .pipe(
         map((res) => {
@@ -189,7 +193,7 @@ export class TournamentService {
   // get participant statistics
   getParticipantsStat(tid: number): Observable<any[]> {
     return this.http
-      .get<any[]>(`http://localhost:3000/api/tournament/${tid}/group-standings`)
+      .get<any[]>(`${this.baseUrl}/tournament/${tid}/group-standings`)
       .pipe(
         map((res) => {
           this.participantsStat = res;
